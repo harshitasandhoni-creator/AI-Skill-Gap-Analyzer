@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local SQLite backup databases
+database/skill_gap_backup.db
+database/skill_gap_before_cleanup.db
