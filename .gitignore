@@ -222,3 +222,5 @@ __marimo__/
 # Local SQLite backup databases
 database/skill_gap_backup.db
 database/skill_gap_before_cleanup.db
+
+database/skill_gap.db

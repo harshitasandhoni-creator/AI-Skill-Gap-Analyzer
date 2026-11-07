@@ -1,0 +1,387 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head><body><div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">SkillBridge<span>.</span></div>
+        <p class="logo-tagline">LEARN. GROW. ACHIEVE.</p>
+
+        <div class="student-info">
+            <div class="avatar" id="sidebarAvatar">S</div>
+
+            <div>
+                <h3 id="sidebarName">Student</h3>
+                <p id="sidebarEmail">student@email.com</p>
+            </div>
+        </div>
+
+        <p class="nav-heading">OVERVIEW</p>
+
+        <nav>
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="#" class="nav-item" data-page="analysis">
+                <span>◈</span> Skill Analysis
+            </a>
+
+            <a href="#" class="nav-item" data-page="resources">
+                <span>▤</span> Learning Resources
+            </a>
+
+            <a href="#" class="nav-item" data-page="progress">
+                <span>◷</span> My Progress
+            </a>
+
+            <a href="#" class="nav-item" data-page="internships">
+                <span>▣</span> Internships
+            </a>
+        </nav>
+
+        <p class="nav-heading settings-heading">ACCOUNT</p>
+
+        <nav>
+            <a href="#" class="nav-item" data-page="profile">
+                <span>♙</span> My Profile
+            </a>
+
+            <a href="#" class="nav-item" data-page="settings">
+                <span>⚙</span> Settings
+            </a>
+        </nav>
+
+        <button id="logoutButton">
+            ↪ Logout
+        </button>
+
+        <div class="sidebar-footer">
+            Your journey starts here.
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p>Your personal career development space</p>
+            </div>
+
+            <div class="topbar-right">
+                <span id="currentDate"></span>
+                <div class="avatar top-avatar" id="topbarAvatar">S</div>
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD PAGE -->
+        <section id="dashboardPage" class="content-page active">
+
+            <!-- WELCOME -->
+            <div class="welcome-section">
+
+                <div>
+                    <p class="welcome-label">YOUR LEARNING JOURNEY</p>
+
+                    <h1>
+                        Good morning,
+                        <span id="welcomeName">Student</span>!
+                    </h1>
+
+                    <p class="welcome-description">
+                        Keep learning. Every skill brings you closer to your dream career.
+                    </p>
+                </div>
+
+                <div class="welcome-decoration">✦</div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-container">
+
+                <div class="stat-card">
+                    <div class="stat-icon purple-icon">◎</div>
+                    <p>Career Match</p>
+                    <h2 id="careerMatch">0%</h2>
+                    <span id="careerName">No career selected</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green-icon">✓</div>
+                    <p>Completed Skills</p>
+                    <h2 id="completedSkills">0</h2>
+                    <span>Skills mastered</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange-icon">◷</div>
+                    <p>Currently Learning</p>
+                    <h2 id="learningSkills">0</h2>
+                    <span>Skills in progress</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue-icon">▤</div>
+                    <p>Total Skills</p>
+                    <h2 id="totalSkills">0</h2>
+                    <span>Required skills</span>
+                </div>
+
+            </div>
+
+
+            <!-- DAILY ACTIVITY -->
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">CONSISTENCY MATTERS</p>
+                    <h2>Your Daily Learning Activity</h2>
+                </div>
+
+                <span class="week-label">THIS WEEK</span>
+            </div>
+
+            <div class="activity-card">
+
+                <div class="activity-summary">
+                    <div>
+                        <h3>Build your learning streak</h3>
+                        <p>Track the time you spend developing your skills.</p>
+                    </div>
+
+                    <div class="activity-total">
+                        <strong id="weeklyLearningTime">0 hrs</strong>
+                        <span>Learning this week</span>
+                    </div>
+                </div>
+
+                <div class="weekly-chart" id="weeklyActivityChart">
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Mon" style="height: 0%"></div>
+                        </div>
+                        <span>Mon</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Tue" style="height: 0%"></div>
+                        </div>
+                        <span>Tue</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Wed" style="height: 0%"></div>
+                        </div>
+                        <span>Wed</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Thu" style="height: 0%"></div>
+                        </div>
+                        <span>Thu</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Fri" style="height: 0%"></div>
+                        </div>
+                        <span>Fri</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Sat" style="height: 0%"></div>
+                        </div>
+                        <span>Sat</span>
+                    </div>
+
+                    <div class="chart-day">
+                        <div class="bar-area">
+                            <div class="activity-bar" data-day="Sun" style="height: 0%"></div>
+                        </div>
+                        <span>Sun</span>
+                    </div>
+
+                </div>
+
+                <p class="chart-note">
+                    Your daily activity will appear here as learning sessions are recorded.
+                </p>
+
+            </div>
+
+
+            <!-- LEARNING RESOURCES BANNER -->
+            <div class="learning-banner">
+
+                <div class="banner-content">
+
+                    <span class="banner-label">YOUR NEXT STEP</span>
+
+                    <h2>
+                        Learn the skills.<br>
+                        Build your future.
+                    </h2>
+
+                    <p>
+                        Discover courses, tutorials and practical resources
+                        to close your skill gaps.
+                    </p>
+
+                    <button class="banner-button" data-go="resources">
+                        Explore Learning Resources <span>→</span>
+                    </button>
+
+                </div>
+
+                <div class="banner-decoration">
+                    ✦
+                </div>
+
+            </div>
+
+
+            <!-- RECOMMENDED RESOURCES -->
+            <div class="section-heading resource-heading">
+
+                <div>
+                    <p class="section-label">KEEP IMPROVING</p>
+                    <h2>Recommended for You</h2>
+                </div>
+
+                <button class="text-button" data-go="resources">
+                    View all →
+                </button>
+
+            </div>
+
+            <div id="recommendedResources" class="resource-grid">
+
+                <div class="resource-card">
+                    <div class="resource-symbol">SQL</div>
+                    <h3>SQL</h3>
+                    <p>Learn database queries and data management.</p>
+                    <button data-go="resources">Explore resources →</button>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-symbol excel-symbol">EX</div>
+                    <h3>Excel</h3>
+                    <p>Improve spreadsheet and data analysis skills.</p>
+                    <button data-go="resources">Explore resources →</button>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-symbol python-symbol">Py</div>
+                    <h3>Python</h3>
+                    <p>Practice programming and problem solving.</p>
+                    <button data-go="resources">Explore resources →</button>
+                </div>
+
+            </div>
+
+
+            <!-- CAREER GOAL -->
+            <div class="panel career-panel">
+
+                <div>
+                    <p class="section-label">YOUR TARGET</p>
+                    <h2>Your Career Goal</h2>
+                    <p id="careerGoalName">
+                        Choose a career to get started.
+                    </p>
+                </div>
+
+                <button class="primary-button" data-go="analysis">
+                    Start Skill Analysis →
+                </button>
+
+            </div>
+
+
+            <!-- RECENT SKILLS -->
+            <div class="panel">
+
+                <h2>Recently Updated Skills</h2>
+
+                <div id="recentSkills">
+                    No skills added yet.
+                </div>
+
+                <button class="primary-button" data-go="progress">
+                    View Progress →
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- SKILL ANALYSIS -->
+        <section id="analysisPage" class="content-page">
+            <h1>Skill Analysis</h1>
+            <div id="analysisContent">
+                <p>Your skill analysis will appear here.</p>
+            </div>
+        </section>
+
+
+        <!-- RESOURCES -->
+        <section id="resourcesPage" class="content-page">
+            <h1>Learning Resources</h1>
+            <p>Discover resources to improve your skills.</p>
+            <div id="resourcesContent"></div>
+        </section>
+
+
+        <!-- PROGRESS -->
+        <section id="progressPage" class="content-page">
+            <h1>My Progress</h1>
+            <div id="progressContent"></div>
+        </section>
+
+
+        <!-- INTERNSHIPS -->
+        <section id="internshipsPage" class="content-page">
+            <h1>Internships</h1>
+            <div id="internshipsContent"></div>
+        </section>
+
+
+        <!-- PROFILE -->
+        <section id="profilePage" class="content-page">
+            <h1>My Profile</h1>
+            <div id="profileContent"></div>
+        </section>
+
+
+        <!-- SETTINGS -->
+        <section id="settingsPage" class="content-page">
+            <h1>Settings</h1>
+            <div id="settingsContent"></div>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>

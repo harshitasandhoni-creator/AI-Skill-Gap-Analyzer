@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f7f7fc;
+    color: #24213d;
+    min-height: 100vh;
+}
+
+/* Header */
+
+.careers-header {
+    background: linear-gradient(135deg, #30216b, #7254d8);
+    color: white;
+    padding: 55px 8%;
+}
+
+.back-link {
+    display: inline-block;
+    color: #eeeaff;
+    text-decoration: none;
+    margin-bottom: 35px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.careers-header h1 {
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.careers-header p {
+    color: #e5dfff;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* Main section */
+
+.careers-container {
+    max-width: 1100px;
+    margin: 45px auto;
+    padding: 0 25px;
+}
+
+/* Search bar */
+
+#searchInput {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px 18px;
+    border: 1px solid #dedbea;
+    border-radius: 12px;
+    background: white;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 30px;
+    transition: 0.2s;
+}
+
+#searchInput:focus {
+    border-color: #7254d8;
+    box-shadow: 0 0 0 3px rgba(114, 84, 216, 0.12);
+}
+
+/* Job list */
+
+.jobs-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.job-card {
+    background: white;
+    border: 1px solid #ece9f5;
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    transition: 0.25s ease;
+    box-shadow: 0 3px 12px rgba(40, 30, 80, 0.04);
+}
+
+.job-card:hover {
+    transform: translateY(-4px);
+    border-color: #b9a9f0;
+    box-shadow: 0 10px 25px rgba(65, 45, 130, 0.10);
+}
+
+.job-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #30265b;
+}
+
+.job-card button {
+    background: #6849cf;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.job-card button:hover {
+    background: #4e34aa;
+}
+
+.jobs-list > p {
+    color: #77738a;
+    padding: 20px 0;
+    line-height: 1.6;
+}
+
+/* Responsive design */
+
+@media (max-width: 700px) {
+    .careers-header {
+        padding: 35px 6%;
+    }
+
+    .careers-header h1 {
+        font-size: 28px;
+    }
+
+    .careers-container {
+        margin: 30px auto;
+        padding: 0 18px;
+    }
+
+    .jobs-list {
+        grid-template-columns: 1fr;
+    }
+
+    .job-card {
+        padding: 19px;
+    }
+}
+
+@media (max-width: 400px) {
+    .job-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
