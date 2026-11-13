@@ -223,4 +223,4 @@ __marimo__/
 database/skill_gap_backup.db
 database/skill_gap_before_cleanup.db
 
-database/skill_gap.db
+#database/skill_gap.db

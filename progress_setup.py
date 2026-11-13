@@ -1,62 +1,33 @@
+
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path("database/skill_gap.db")
+# Project paths
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "database" / "skill_gap.db"
+SQL_PATH = BASE_DIR / "resource_progress_setup.sql"
 
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+# Check whether SQL file exists
+if not SQL_PATH.exists():
+    raise FileNotFoundError("resource_progress_setup.sql file not found!")
 
+# Connect to the existing database
 conn = sqlite3.connect(DB_PATH)
-
 conn.execute("PRAGMA foreign_keys = ON")
 
-# Student profiles table
-conn.execute("""
-CREATE TABLE IF NOT EXISTS students (
+try:
+    # Read and execute SQL setup file
+    with open(SQL_PATH, "r", encoding="utf-8") as file:
+        sql_script = file.read()
 
-    student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conn.executescript(sql_script)
+    conn.commit()
 
-    name TEXT NOT NULL,
+    print("Progress tracking tables created successfully!")
 
-    email TEXT NOT NULL UNIQUE,
+except Exception as error:
+    conn.rollback()
+    print("Error creating progress tables:", error)
 
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-
-)
-""")
-
-# Student skill progress table
-conn.execute("""
-CREATE TABLE IF NOT EXISTS student_skill_progress (
-
-    progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    student_id INTEGER NOT NULL,
-
-    role_id INTEGER NOT NULL,
-
-    skill_name TEXT NOT NULL,
-
-    progress_percentage REAL NOT NULL DEFAULT 0
-        CHECK (
-            progress_percentage >= 0
-            AND progress_percentage <= 100
-        ),
-
-    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (student_id)
-        REFERENCES students(student_id),
-
-    FOREIGN KEY (role_id)
-        REFERENCES roles(role_id),
-
-    UNIQUE (student_id, role_id, skill_name)
-
-)
-""")
-
-conn.commit()
-
-print("Progress tracking tables created successfully!")
-
-conn.close()
+finally:
+    conn.close()

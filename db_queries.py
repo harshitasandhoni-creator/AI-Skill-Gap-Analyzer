@@ -213,13 +213,275 @@ def get_database_stats():
 
         return stats
 
+# ==========================================
+# 9. REGISTER A STUDENT
+# ==========================================
+
+def register_student(name, email):
+    """Register a student or return the existing student ID."""
+
+    if not name or not name.strip():
+        raise ValueError("Student name cannot be empty.")
+
+    if not email or not email.strip():
+        raise ValueError("Email cannot be empty.")
+
+    with get_connection() as conn:
+        conn.execute("""
+            INSERT OR IGNORE INTO students (name, email)
+            VALUES (?, ?)
+        """, (name.strip(), email.strip().lower()))
+
+        student = conn.execute("""
+            SELECT student_id
+            FROM students
+            WHERE email = ?
+        """, (email.strip().lower(),)).fetchone()
+
+        return student["student_id"]
+
 
 # ==========================================
-# 9. TEST DATABASE FUNCTIONS
+# 10. ASSIGN ROLE RESOURCES TO A STUDENT
+# ==========================================
+
+def assign_resources_to_student(student_id, role_id):
+    """Assign all learning resources of a role to a student."""
+
+    role_resources = get_resources_for_role(role_id)
+
+    if role_resources is None:
+        raise ValueError("Invalid role ID.")
+
+    assigned_count = 0
+
+    with get_connection() as conn:
+        for skill in role_resources["skills"]:
+
+            for resource in skill["resources"]:
+
+                cursor = conn.execute("""
+                    INSERT OR IGNORE INTO student_resource_progress
+                    (student_id, role_id, resource_id)
+                    VALUES (?, ?, ?)
+                """, (
+                    student_id,
+                    role_id,
+                    resource["resource_id"]
+                ))
+
+                assigned_count += cursor.rowcount
+
+    return assigned_count
+
+
+# ==========================================
+# 11. UPDATE RESOURCE PROGRESS
+# ==========================================
+
+def update_resource_progress(
+    student_id,
+    role_id,
+    resource_id,
+    status
+):
+    """Update the completion status of a learning resource."""
+
+    valid_statuses = [
+        "Not Started",
+        "In Progress",
+        "Completed"
+    ]
+
+    if status not in valid_statuses:
+        raise ValueError("Invalid progress status.")
+
+    with get_connection() as conn:
+
+        cursor = conn.execute("""
+            UPDATE student_resource_progress
+
+            SET
+                status = ?,
+
+                started_at = CASE
+                    WHEN ? = 'Not Started' THEN NULL
+                    ELSE COALESCE(started_at, CURRENT_TIMESTAMP)
+                END,
+
+                completed_at = CASE
+                    WHEN ? = 'Completed' THEN CURRENT_TIMESTAMP
+                    ELSE NULL
+                END,
+
+                updated_at = CURRENT_TIMESTAMP
+
+            WHERE student_id = ?
+              AND role_id = ?
+              AND resource_id = ?
+
+        """, (
+            status,
+            status,
+            status,
+            student_id,
+            role_id,
+            resource_id
+        ))
+
+        if cursor.rowcount == 0:
+            raise ValueError(
+                "Resource progress record not found. "
+                "Assign resources first."
+            )
+
+        return True
+
+
+# ==========================================
+# 12. GET STUDENT OVERALL PROGRESS
+# ==========================================
+
+def get_student_overall_progress(student_id, role_id):
+    """Calculate overall learning resource completion."""
+
+    with get_connection() as conn:
+        result = conn.execute("""
+            SELECT
+                COUNT(*) AS total_resources,
+
+                SUM(
+                    CASE WHEN status = 'Completed'
+                    THEN 1 ELSE 0 END
+                ) AS completed_resources,
+
+                SUM(
+                    CASE WHEN status = 'In Progress'
+                    THEN 1 ELSE 0 END
+                ) AS in_progress_resources
+
+            FROM student_resource_progress
+            WHERE student_id = ?
+              AND role_id = ?
+        """, (student_id, role_id)).fetchone()
+
+        total = result["total_resources"]
+        completed = result["completed_resources"] or 0
+        in_progress = result["in_progress_resources"] or 0
+
+        percentage = (
+            (completed / total) * 100
+            if total > 0 else 0
+        )
+
+        return {
+            "total_resources": total,
+            "completed_resources": completed,
+            "in_progress_resources": in_progress,
+            "not_started_resources": total - completed - in_progress,
+            "progress_percentage": round(percentage, 2)
+        }
+
+# ==========================================
+# 13. GET STUDENT RESOURCES WITH PROGRESS
+# ==========================================
+
+def get_student_resources_with_progress(student_id, role_id):
+    """Return assigned resources with their progress status."""
+
+    with get_connection() as conn:
+        cursor = conn.execute("""
+            SELECT
+                srp.resource_id,
+                lr.skill_name,
+                lr.platform,
+                lr.resource_title,
+                lr.resource_url,
+                lr.resource_type,
+                srp.status,
+                srp.started_at,
+                srp.completed_at,
+                srp.updated_at
+
+            FROM student_resource_progress AS srp
+
+            JOIN learning_resources AS lr
+                ON srp.resource_id = lr.resource_id
+
+            WHERE srp.student_id = ?
+              AND srp.role_id = ?
+
+            ORDER BY lr.skill_name, lr.resource_title
+        """, (student_id, role_id))
+
+        return [dict(row) for row in cursor.fetchall()]
+
+# ==========================================
+# 12. TEST DATABASE FUNCTIONS
 # ==========================================
 
 if __name__ == "__main__":
     try:
+         # Test 7: Student Registration
+        print("\n7. STUDENT REGISTRATION")
+
+        student_id = register_student(
+            "Test Student",
+            "teststudent@example.com"
+        )
+
+        print("Student ID:", student_id)
+        # Test 8: Assign Resources
+        print("\n8. ASSIGN RESOURCES TO STUDENT")
+
+        assigned_count = assign_resources_to_student(
+            student_id,
+            1
+        )
+
+        print("New resources assigned:", assigned_count)
+         # Test 9: Update Resource Progress
+        print("\n9. UPDATE RESOURCE PROGRESS")
+
+        role_resources = get_resources_for_role(1)
+
+        test_resource_id = role_resources["skills"][0]["resources"][0]["resource_id"]
+
+        update_resource_progress(
+            student_id,
+            1,
+            test_resource_id,
+            "In Progress"
+        )
+
+        print("Resource ID:", test_resource_id)
+        print("Status updated to: In Progress")
+          # Test 11: Mark Resource as Completed
+        print("\n11. MARK RESOURCE AS COMPLETED")
+
+        update_resource_progress(
+            student_id,
+            1,
+            test_resource_id,
+            "Completed"
+        )
+
+        print("Resource status updated to: Completed")
+        # Test 10: Overall Student Progress
+        print("\n10. STUDENT OVERALL PROGRESS")
+
+        progress = get_student_overall_progress(student_id, 1)
+
+        print(progress)
+                # Test 12: Student Resources with Progress
+        print("\n12. STUDENT RESOURCES WITH PROGRESS")
+
+        student_resources = get_student_resources_with_progress(
+            student_id, 1
+        )
+
+        for resource in student_resources:
+            print(resource)
         print("=" * 50)
         print("DATABASE FUNCTIONS TEST")
         print("=" * 50)
