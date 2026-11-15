@@ -1232,6 +1232,9 @@ async function initializeDashboard() {
 
         const careerSelect =
             document.getElementById("careerSelect");
+        
+        const careerSearch =
+            document.getElementById("careerSearch");
 
         const skillsInput =
             document.getElementById("studentSkills");
@@ -1243,14 +1246,14 @@ async function initializeDashboard() {
         );
 
         if (savedRole) {
-
             categorySelect.value = savedRole.sector;
 
             updateCareerOptions(savedRole.sector);
 
             careerSelect.value = String(savedAnalysis.role_id);
-        }
 
+            careerSearch.value = savedRole.job_role;
+        }
         // Restore previously entered skills
         if (skillsInput) {
             skillsInput.value =
