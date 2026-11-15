@@ -72,7 +72,6 @@ const pageNames = {
     analysis: "Skill Analysis",
     resources: "Learning Resources",
     progress: "My Progress",
-    internships: "Internships",
     profile: "My Profile",
     settings: "Settings"
 };
@@ -463,20 +462,37 @@ analysisContent.innerHTML = `
         </select>
 
 
-        <label for="careerSelect">
-            <strong>Select Target Job Role</strong>
-        </label>
 
-        <select id="careerSelect"
-            disabled
-            style="width:100%; padding:13px; margin-top:10px;
-            margin-bottom:25px; border:1px solid #ddd8ec;
-            border-radius:9px; background:white;">
+<label for="careerSearch">
+    <strong>Search and Select Target Job Role</strong>
+</label>
 
-            <option value="">Select a category first</option>
+<div id="careerDropdown" style="position:relative; width:100%; margin-top:10px; margin-bottom:25px;">
 
-        </select>
+    <input
+        type="text"
+        id="careerSearch"
+        placeholder="Search job roles, e.g. Data Analyst..."
+        autocomplete="off"
+        disabled
+        style="width:100%; padding:13px; border:1px solid #ddd8ec;
+        border-radius:9px; background:white; box-sizing:border-box;"
+    >
 
+    <div
+        id="careerOptions"
+        style="display:none; position:absolute; top:100%; left:0;
+        width:100%; max-height:220px; overflow-y:auto;
+        background:white; border:1px solid #ddd8ec;
+        border-radius:9px; z-index:1000;
+        box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    </div>
+
+</div>
+
+<select id="careerSelect" hidden>
+    <option value="">Select a category first</option>
+</select>
 
         <label for="studentSkills">
             <strong>Your Existing Skills</strong>
@@ -512,9 +528,7 @@ analysisContent.innerHTML = `
 // =====================================
 // LOAD JOB ROLES
 // =====================================
-// =====================================
-// LOAD CATEGORIES AND JOB ROLES
-// =====================================
+
 // =====================================
 // LOAD CATEGORIES AND JOB ROLES
 // =====================================
@@ -522,22 +536,23 @@ analysisContent.innerHTML = `
 let allRoles = [];
 
 async function loadJobRoles() {
-
     const categorySelect = document.getElementById("categorySelect");
     const careerSelect = document.getElementById("careerSelect");
+    const careerSearch = document.getElementById("careerSearch");
+    const careerOptions = document.getElementById("careerOptions");
     const message = document.getElementById("analysisMessage");
 
     try {
-
         categorySelect.innerHTML =
             `<option value="">Loading categories...</option>`;
 
         careerSelect.innerHTML =
             `<option value="">Select a category first</option>`;
 
-        careerSelect.disabled = true;
+        careerSearch.value = "";
+        careerSearch.disabled = true;
+        careerOptions.style.display = "none";
 
-        // Fetch all available job roles
         const response = await fetch(`${API_URL}/roles`);
 
         if (!response.ok) {
@@ -552,7 +567,6 @@ async function loadJobRoles() {
 
         allRoles = data.roles;
 
-        // Extract unique categories
         const categories = [
             ...new Set(
                 allRoles
@@ -561,47 +575,37 @@ async function loadJobRoles() {
             )
         ].sort();
 
-        // Populate category dropdown
         categorySelect.innerHTML =
             `<option value="">Choose a career category</option>`;
 
         categories.forEach(category => {
-
             const option = document.createElement("option");
-
             option.value = category;
             option.textContent = category;
-
             categorySelect.appendChild(option);
-
         });
 
         // Restore previously selected role
         const savedRoleId = localStorage.getItem("selected_role_id");
 
         if (savedRoleId) {
-
             const savedRole = allRoles.find(
                 role => String(role.role_id) === String(savedRoleId)
             );
 
             if (savedRole) {
-
                 categorySelect.value = savedRole.sector;
-
                 updateCareerOptions(savedRole.sector);
 
                 careerSelect.value = String(savedRoleId);
-
+                careerSearch.value = savedRole.job_role;
             }
-
         }
 
         console.log("Categories loaded:", categories);
         console.log("Job roles loaded:", allRoles.length);
 
     } catch (error) {
-
         console.error("Dropdown loading error:", error);
 
         categorySelect.innerHTML =
@@ -610,11 +614,13 @@ async function loadJobRoles() {
         careerSelect.innerHTML =
             `<option value="">Unable to load job roles</option>`;
 
+        careerSearch.disabled = true;
+        careerOptions.style.display = "none";
+
         if (message) {
             message.textContent =
                 "Unable to load categories. Please check the server.";
         }
-
     }
 }
 
@@ -624,90 +630,167 @@ async function loadJobRoles() {
 // =====================================
 
 function updateCareerOptions(selectedCategory) {
+    const careerSelect = document.getElementById("careerSelect");
+    const careerSearch = document.getElementById("careerSearch");
+    const careerOptions = document.getElementById("careerOptions");
 
+    careerSelect.innerHTML =
+        `<option value="">Choose your target job role</option>`;
+
+    careerSearch.value = "";
+    careerOptions.innerHTML = "";
+    careerOptions.style.display = "none";
+
+    const filteredRoles = allRoles.filter(
+        role => role.sector === selectedCategory
+    );
+
+    filteredRoles.forEach(role => {
+        const option = document.createElement("option");
+        option.value = String(role.role_id);
+        option.textContent = role.job_role;
+        careerSelect.appendChild(option);
+    });
+
+    careerSearch.disabled = filteredRoles.length === 0;
+    careerSearch.placeholder = filteredRoles.length
+        ? "Search or select a job role..."
+        : "Select a category first";
+}
+
+
+// =====================================
+// DISPLAY SEARCHABLE JOB ROLE OPTIONS
+// =====================================
+
+function renderCareerOptions(searchText = "") {
+    const categorySelect = document.getElementById("categorySelect");
+    const careerOptions = document.getElementById("careerOptions");
+
+    const selectedCategory = categorySelect.value;
+    const search = searchText.trim().toLowerCase();
+
+    const filteredRoles = allRoles.filter(role =>
+        role.sector === selectedCategory &&
+        role.job_role.toLowerCase().includes(search)
+    );
+
+    careerOptions.innerHTML = "";
+
+    if (filteredRoles.length === 0) {
+        const emptyMessage = document.createElement("div");
+        emptyMessage.textContent = "No matching job roles found.";
+        emptyMessage.style.padding = "12px";
+        emptyMessage.style.color = "#858398";
+        careerOptions.appendChild(emptyMessage);
+    } else {
+        filteredRoles.forEach(role => {
+            const option = document.createElement("button");
+
+            option.type = "button";
+            option.textContent = role.job_role;
+
+            option.style.width = "100%";
+            option.style.display = "block";
+            option.style.padding = "12px";
+            option.style.textAlign = "left";
+            option.style.border = "none";
+            option.style.borderBottom = "1px solid #eee";
+            option.style.background = "white";
+            option.style.cursor = "pointer";
+
+            option.addEventListener("mouseenter", function () {
+                this.style.background = "#f2efff";
+            });
+
+            option.addEventListener("mouseleave", function () {
+                this.style.background = "white";
+            });
+
+            option.addEventListener("click", function () {
+                const careerSelect = document.getElementById("careerSelect");
+                const careerSearch = document.getElementById("careerSearch");
+
+                careerSearch.value = role.job_role;
+                careerSelect.value = String(role.role_id);
+
+                localStorage.setItem(
+                    "selected_role_id",
+                    String(role.role_id)
+                );
+
+                careerOptions.style.display = "none";
+            });
+
+            careerOptions.appendChild(option);
+        });
+    }
+
+    careerOptions.style.display = "block";
+}
+
+
+// =====================================
+// CATEGORY CHANGE EVENT
+// =====================================
+
+document.getElementById("categorySelect")
+    .addEventListener("change", function () {
+        updateCareerOptions(this.value);
+        localStorage.removeItem("selected_role_id");
+    });
+
+
+// =====================================
+// SEARCH INPUT EVENTS
+// =====================================
+
+const careerSearch = document.getElementById("careerSearch");
+
+careerSearch.addEventListener("focus", function () {
+    renderCareerOptions(this.value);
+});
+
+careerSearch.addEventListener("click", function () {
+    renderCareerOptions(this.value);
+});
+
+careerSearch.addEventListener("input", function () {
     const careerSelect = document.getElementById("careerSelect");
 
-    careerSelect.innerHTML =
-        `<option value="">Choose your target job role</option>`;
+    careerSelect.value = "";
+    localStorage.removeItem("selected_role_id");
 
-    const filteredRoles = allRoles.filter(
-        role => role.sector === selectedCategory
-    );
-
-    filteredRoles.forEach(role => {
-
-        const option = document.createElement("option");
-
-        option.value = role.role_id;
-        option.textContent = role.job_role;
-
-        careerSelect.appendChild(option);
-
-    });
-
-    careerSelect.disabled = filteredRoles.length === 0;
-
-}
+    renderCareerOptions(this.value);
+});
 
 
 // =====================================
-// CATEGORY CHANGE EVENT
+// CLOSE DROPDOWN WHEN CLICKING OUTSIDE
 // =====================================
 
-document.getElementById("categorySelect")
-    .addEventListener("change", function () {
+document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("careerDropdown");
+    const careerOptions = document.getElementById("careerOptions");
 
-        updateCareerOptions(this.value);
-
-    });
-// =====================================
-// FILTER ROLES BY CATEGORY
-// =====================================
-
-function updateCareerOptions(selectedCategory) {
-
-    const careerSelect =
-        document.getElementById("careerSelect");
-
-    careerSelect.innerHTML =
-        `<option value="">Choose your target job role</option>`;
-
-    const filteredRoles = allRoles.filter(
-        role => role.sector === selectedCategory
-    );
-
-    filteredRoles.forEach(role => {
-
-        const option = document.createElement("option");
-
-        option.value = role.role_id;
-        option.textContent = role.job_role;
-
-        careerSelect.appendChild(option);
-
-    });
-
-    careerSelect.disabled = filteredRoles.length === 0;
-
-}
+    if (dropdown && !dropdown.contains(event.target)) {
+        careerOptions.style.display = "none";
+    }
+});
 
 
 // =====================================
-// CATEGORY CHANGE EVENT
+// LOAD CATEGORIES AND ROLES
 // =====================================
 
-document.getElementById("categorySelect")
-    .addEventListener("change", function () {
-
-        updateCareerOptions(this.value);
-
-    });
+loadJobRoles();
 
 // =====================================
 // ANALYSE SKILLS
 // =====================================
 
 document.getElementById("analyzeSkillsButton").addEventListener(
+    
     "click",
     async function () {
 
@@ -787,6 +870,44 @@ document.getElementById("analyzeSkillsButton").addEventListener(
                     data.detail || "Skill analysis failed."
                 );
             }
+            // Save selected career
+localStorage.setItem(
+    "selected_role_id",
+    String(roleId)
+);
+
+// Initialize learning progress
+console.log("DEBUG: Starting progress initialization");
+
+const progressResponse = await fetch(
+    `${API_URL}/progress/initialize`,
+    {
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+
+        body: JSON.stringify({
+            role_id: Number(roleId),
+            student_skills: studentSkills
+        })
+    }
+);
+
+const progressData = await progressResponse.json();
+console.log("DEBUG: Initialization response:", progressData);
+console.log("DEBUG: Status:", progressResponse.status);
+
+if (!progressResponse.ok) {
+    throw new Error(
+        progressData.detail ||
+        "Unable to initialize learning progress."
+    );
+}
+
+console.log("Learning progress initialized:", progressData);
 
 
             // Save selected career
