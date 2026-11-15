@@ -1,4 +1,4 @@
-// =====================================
+﻿// =====================================
 // SKILLBRIDGE FRONTEND CONFIGURATION
 // =====================================
 
@@ -327,16 +327,14 @@ setTimeout(function () {
 // =====================================
 
 const careerSection = document.getElementById("careerSection");
-const careerSelect = document.getElementById("careerSelect");
 const careerSearch = document.getElementById("careerSearch");
 const careerMessage = document.getElementById("careerMessage");
 
 let allCareerRoles = [];
+let selectedCareerRoleId = "";
 
 async function loadCareerRoles() {
-
     try {
-
         const response = await fetch(`${API_URL}/roles`);
 
         if (!response.ok) {
@@ -344,128 +342,43 @@ async function loadCareerRoles() {
         }
 
         const data = await response.json();
-
         allCareerRoles = data.roles;
-
         displayCareerRoles(allCareerRoles);
-
-    }
-
-    catch (error) {
-
-        careerSelect.innerHTML =
-            '<option value="">Failed to load job roles</option>';
-
+    } catch (error) {
         careerMessage.textContent = error.message;
-
     }
-
 }
-
-
-// =====================================
-// DISPLAY JOB ROLES
-// =====================================
 
 function displayCareerRoles(roles) {
-
-    careerSelect.innerHTML =
-        '<option value="">Choose your target career</option>';
-
-    roles.forEach(function (role) {
-
-        const option = document.createElement("option");
-
-        option.value = role.role_id;
-
-        option.textContent =
-            `${role.job_role} (${role.sector})`;
-
-        careerSelect.appendChild(option);
-
-    });
-
+    // No dropdown or suggestions needed.
 }
 
-
-// =====================================
-// SEARCH JOB ROLES
-// =====================================
-
 careerSearch.addEventListener("input", function () {
-
-    const searchText = careerSearch.value.toLowerCase().trim();
+    const searchText = careerSearch.value.trim().toLowerCase();
 
     const filteredRoles = allCareerRoles.filter(function (role) {
-
         return (
             role.job_role.toLowerCase().includes(searchText) ||
             role.sector.toLowerCase().includes(searchText)
         );
-
     });
 
     displayCareerRoles(filteredRoles);
 
+    const selectedRole = allCareerRoles.find(function (role) {
+    return role.job_role.trim().toLowerCase() === searchText;
 });
-// =====================================
-// DISPLAY JOB ROLES
-// =====================================
 
-function displayCareerRoles(roles) {
-
-    careerSelect.innerHTML =
-        '<option value="">Choose your target career</option>';
-
-    roles.forEach(function (role) {
-
-        const option = document.createElement("option");
-
-        option.value = role.role_id;
-
-        option.textContent =
-            `${role.job_role} (${role.sector})`;
-
-        careerSelect.appendChild(option);
-
-    });
-
-}
-// Save the selected job role from the homepage
-careerSelect.addEventListener("change", function () {
-
-    const selectedRoleId = careerSelect.value;
-
-    if (selectedRoleId) {
-        localStorage.setItem("selected_role_id", selectedRoleId);
+    if (selectedRole) {
+        selectedCareerRoleId = String(selectedRole.role_id);
+        localStorage.setItem("selected_role_id", selectedCareerRoleId);
     } else {
+        selectedCareerRoleId = "";
         localStorage.removeItem("selected_role_id");
     }
-
 });
 
-
-// =====================================
-// SEARCH JOB ROLES
-// =====================================
-
-careerSearch.addEventListener("input", function () {
-
-    const searchText = careerSearch.value.toLowerCase().trim();
-
-    const filteredRoles = allCareerRoles.filter(function (role) {
-
-        return (
-            role.job_role.toLowerCase().includes(searchText) ||
-            role.sector.toLowerCase().includes(searchText)
-        );
-
-    });
-
-    displayCareerRoles(filteredRoles);
-
-});
-// =====================================
+loadCareerRoles();
 // HANDLE LOGIN AND SELECTED ROLE
 // =====================================
 
@@ -504,7 +417,7 @@ const skillAnalysisResults = document.getElementById(
 
 continueCareer.addEventListener("click", async function () {
 
-    const roleId = careerSelect.value;
+    const roleId = selectedCareerRoleId;
 
     const skillsInput = studentSkills.value.trim();
 
@@ -587,7 +500,7 @@ continueCareer.addEventListener("click", async function () {
 
         data.matched_skills.forEach(skill => {
             const item = document.createElement("li");
-            item.textContent = "✓ " + skill;
+            item.textContent = "âœ“ " + skill;
             matchedList.appendChild(item);
         });
 
@@ -598,7 +511,7 @@ continueCareer.addEventListener("click", async function () {
 
         data.missing_skills.forEach(skill => {
             const item = document.createElement("li");
-            item.textContent = "○ " + skill;
+            item.textContent = "â—‹ " + skill;
             missingList.appendChild(item);
         });
 
@@ -633,7 +546,7 @@ continueCareer.addEventListener("click", async function () {
     finally {
 
         continueCareer.disabled = false;
-        continueCareer.textContent = "Analyze My Skills →";
+        continueCareer.textContent = "Analyze My Skills â†’";
 
     }
 
