@@ -782,38 +782,58 @@ document.getElementById("analyzeSkillsButton").addEventListener(
 
             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(
-                    data.detail || "Skill analysis failed."
-                );
-            }
+if (!response.ok) {
+    throw new Error(
+        data.detail || "Skill analysis failed."
+    );
+}
 
-
-            // Save selected career
-            localStorage.setItem(
-                "selected_role_id",
-                String(roleId)
-            );
-
-            // Display results
-            displayAnalysisResults(data);
-            message.textContent =
-                "Your skill analysis is complete!";
-        }
-
-        catch (error) {
-            message.textContent = error.message;
-            console.error(error);
-        }
-
-        finally {
-            button.disabled = false;
-            button.textContent = "Analyse My Skills →";
-        }
-
+// Initialize individual skill progress
+const progressResponse = await fetch(
+    `${API_URL}/progress/initialize`,
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            role_id: Number(roleId),
+            student_skills: studentSkills
+        })
     }
 );
 
+const progressData = await progressResponse.json();
+
+if (!progressResponse.ok) {
+    throw new Error(
+        progressData.detail || "Progress initialization failed."
+    );
+}
+
+console.log("Progress initialized:", progressData);
+
+// Save selected career
+localStorage.setItem(
+    "selected_role_id",
+    String(roleId)
+);
+
+// Display results
+displayAnalysisResults(data);
+
+message.textContent =
+    "Your skill analysis is complete!";
+
+} catch (error) {
+    message.textContent = error.message;
+    console.error(error);
+} finally {
+    button.disabled = false;
+    button.textContent = "Analyse My Skills →";
+}
+});
 
 // =====================================
 // DISPLAY ANALYSIS RESULTS
