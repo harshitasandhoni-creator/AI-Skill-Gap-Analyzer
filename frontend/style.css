@@ -1312,3 +1312,403 @@ footer {
     }
 }
 
+/* =========================================
+   SKILLBRIDGE COMPLETE DARK THEME
+   MIDNIGHT NAVY + PEACOCK BLUE + EMERALD
+========================================= */
+
+/* GLOBAL */
+
+body {
+    background: #060D15;
+    color: #F8FAFC;
+}
+
+/* NAVBAR */
+
+.header {
+    background: #0C1824;
+    border-bottom: 1px solid #1E3348;
+}
+
+.logo {
+    color: #F8FAFC !important;
+}
+
+.logo-icon,
+.mini-logo {
+    color: #22D3EE;
+}
+
+.nav-links a {
+    color: #CBD5E1;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+    color: #22D3EE;
+}
+
+.login-button {
+    color: #F8FAFC;
+}
+
+.signup-button {
+    background: #14B8A6;
+    color: #060D15;
+}
+
+.signup-button:hover {
+    background: #0D9488;
+}
+
+/* HERO SECTION */
+
+.hero {
+    background:
+        radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.12), transparent 35%),
+        linear-gradient(120deg, #060D15, #0C1824 65%, #102A38);
+}
+
+.hero h1 {
+    color: #F8FAFC;
+}
+
+.hero h1 span {
+    color: #22D3EE;
+}
+
+.tagline {
+    background: rgba(34, 211, 238, 0.12);
+    color: #22D3EE;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.description {
+    color: #CBD5E1;
+}
+
+.primary-button {
+    background: linear-gradient(135deg, #0891B2, #0D9488);
+    color: #FFFFFF;
+}
+
+.primary-button:hover {
+    background: linear-gradient(135deg, #0E7490, #0F766E);
+}
+
+.secondary-button {
+    color: #F8FAFC;
+    border-color: #22D3EE;
+}
+
+.secondary-button:hover {
+    background: #112233;
+}
+
+.trust-section p {
+    color: #CBD5E1;
+}
+
+.trust-avatars span {
+    background: #1E3348;
+    color: #F8FAFC;
+    border-color: #0C1824;
+}
+
+.trust-avatars .avatar-count {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+/* DASHBOARD PREVIEW */
+
+.dashboard-preview {
+    background: #0C1824;
+    border: 1px solid #1E3348;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.dashboard-sidebar {
+    border-right: 1px solid #1E3348;
+}
+
+.dashboard-sidebar h3,
+.dashboard-main h3,
+.career-card h4,
+.skill-progress-card h4 {
+    color: #F8FAFC;
+}
+
+.sidebar-item {
+    color: #94A3B8;
+}
+
+.sidebar-item.selected {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+.progress-circle {
+    background: conic-gradient(
+        #22D3EE 0% 72%,
+        #1E3348 72% 100%
+    );
+}
+
+.progress-circle::before {
+    background: #0C1824;
+}
+
+.progress-circle span {
+    color: #F8FAFC;
+}
+
+.career-card {
+    background: #112233;
+    border-color: #1E3348;
+}
+
+.career-card p {
+    color: #94A3B8;
+}
+
+.career-icon {
+    color: #22D3EE;
+}
+
+.match-badge {
+    background: #064E3B;
+    color: #6EE7B7;
+}
+
+.skill-progress-card {
+    background: #112233;
+    border-color: #1E3348;
+}
+
+.skill-row {
+    color: #CBD5E1;
+}
+
+.progress-track {
+    background: #263B4D;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #22D3EE, #14B8A6);
+}
+
+/* FEATURES SECTION */
+
+.features {
+    background: #060D15;
+}
+
+.section-heading h2 {
+    color: #F8FAFC;
+}
+
+.section-heading p {
+    color: #94A3B8;
+}
+
+.feature-card {
+    background: #0C1824;
+    border: 1px solid #1E3348;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card:hover {
+    border-color: #22D3EE;
+    box-shadow: 0 15px 35px rgba(34, 211, 238, 0.08);
+}
+
+.feature-icon {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+.feature-card h3 {
+    color: #F8FAFC;
+}
+
+.feature-card p {
+    color: #94A3B8;
+}
+
+/* HOW IT WORKS */
+
+.how-it-works {
+    background: #0A1520;
+}
+
+.step-card {
+    background: #0C1824;
+    border: 1px solid #1E3348;
+}
+
+.step-number {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+.step-card h3 {
+    color: #F8FAFC;
+}
+
+.step-card p {
+    color: #94A3B8;
+}
+
+/* CAREER SELECTION */
+
+.career-selection {
+    background:
+        radial-gradient(circle at 10% 8%, rgba(34, 211, 238, 0.10), transparent 28%),
+        radial-gradient(circle at 92% 85%, rgba(20, 184, 166, 0.08), transparent 26%),
+        #060D15;
+}
+
+.career-heading h2 {
+    color: #F8FAFC;
+}
+
+.career-heading p {
+    color: #94A3B8;
+}
+
+.career-form {
+    background: #0C1824;
+    border-color: #1E3348;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+}
+
+.career-form label {
+    color: #CBD5E1;
+}
+
+#careerSearch,
+#careerSelect,
+#studentSkills {
+    color: #F8FAFC;
+    background: #112233;
+    border-color: #294256;
+}
+
+#careerSearch::placeholder,
+#studentSkills::placeholder {
+    color: #94A3B8;
+}
+
+#careerSearch:focus,
+#careerSelect:focus,
+#studentSkills:focus {
+    background: #112233;
+    border-color: #22D3EE;
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12);
+}
+
+#careerSelect option {
+    background: #0C1824;
+    color: #F8FAFC;
+}
+
+#continueCareer {
+    background: linear-gradient(135deg, #0891B2, #0D9488);
+}
+
+#skillAnalysisResults {
+    color: #F8FAFC;
+}
+
+#skillAnalysisResults h2,
+#skillAnalysisResults h3 {
+    color: #F8FAFC;
+}
+
+#skillAnalysisResults > p {
+    color: #94A3B8;
+}
+
+#skillAnalysisResults li {
+    color: #CBD5E1;
+    background: #112233;
+    border-color: #1E3348;
+}
+
+/* FEATURED SKILL CATEGORIES */
+
+.skill-categories {
+    background: #060D15;
+}
+
+.categories-eyebrow {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+.categories-heading h2 {
+    color: #F8FAFC;
+}
+
+.categories-heading p {
+    color: #94A3B8;
+}
+
+.category-card {
+    background: #0C1824;
+    border-color: #1E3348;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+.category-card:hover {
+    border-color: #22D3EE;
+    box-shadow: 0 14px 28px rgba(34, 211, 238, 0.08);
+}
+
+.category-icon {
+    background: #164E63;
+}
+
+.category-card h3 {
+    color: #F8FAFC;
+}
+
+.category-card p {
+    color: #94A3B8;
+}
+
+/* FOOTER */
+
+footer {
+    background: #030912;
+    border-top: 1px solid #1E3348;
+}
+
+.footer-logo {
+    color: #F8FAFC !important;
+}
+
+.footer-content p {
+    color: #94A3B8;
+}
+
+.copyright {
+    border-color: #1E3348;
+}
+
+/* AUTHENTICATION MODAL */
+
+.auth-box {
+    background: #0C1824 !important;
+    border-color: #1E3348;
+}
+
+/* RESPONSIVE SAFETY */
+
+@media (max-width: 768px) {
+    .logo {
+        color: #F8FAFC !important;
+    }
+}
